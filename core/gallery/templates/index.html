@@ -42,17 +42,20 @@
                             <img src="{{ gallery.photo.url }}" class="card-img-top" alt="{{ gallery.photo.url }}">
                         {% endif %}
                         <div class="card-body">
-                            <h5 class="card-title">Автор: <a class="profile"
-                                                             href="{% url 'profile' gallery.author.pk %}">{{ gallery.author }}</a>
+                            <h5 class="card-title">Автор:{% if user.is_authenticated %} <a class="profile"
+                                                                                           href="{% url 'profile' gallery.author.pk %}">{{ gallery.author }}</a>{% else %}
+                                {{ gallery.author }}{% endif %}
                             </h5>
                             <h5 class="card-title">Подпись: {{ gallery.signature }}</h5><br>
                             <div class="btn-group" role="group">
                                 <a class="nav-link" aria-current="page" href="{% url 'gallery-detail' gallery.pk %}">
                                     <button type="button" class="btn btn-dark">Подробнее</button>
                                 </a>
-                                <input type="submit" class="btn btn-success"
-                                       id="{{ gallery.pk }}" value="Добавить"
-                                       style="margin-left: 10px; border-radius: 5px">
+                                {% if user.is_authenticated %}
+                                    <input type="submit" class="btn btn-success"
+                                           id="{{ gallery.pk }}" value="Добавить"
+                                           style="margin-left: 10px; border-radius: 5px">
+                                {% endif %}
                             </div>
                         </div>
                     </div>
@@ -69,9 +72,9 @@
             xhr.onload = function () {
                 console.log(xhr.status);
             };
-            if (add.value === 'Добавить'){
+            if (add.value === 'Добавить') {
                 add.value = 'Удалить'
-            } else{
+            } else {
                 add.value = 'Добавить'
             }
             xhr.open('POST', `api/favorite/${this.getAttribute('id')}`);

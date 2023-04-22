@@ -2,7 +2,6 @@ from django.shortcuts import render, redirect
 from .models import Gallery
 from django.views.generic import CreateView, UpdateView, ListView, DetailView, DeleteView
 from .forms import GalleryForm
-from django.contrib.auth.mixins import LoginRequiredMixin
 
 
 class GalleryListView(ListView):
@@ -13,7 +12,7 @@ class GalleryListView(ListView):
     ordering = ('-created_at',)
 
 
-class GalleryCreateView(LoginRequiredMixin, CreateView):
+class GalleryCreateView(CreateView):
     template_name = 'create_gallery.html'
     model = Gallery
     form_class = GalleryForm
