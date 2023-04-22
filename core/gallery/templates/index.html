@@ -1,0 +1,81 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Galleries{% endblock %}
+{% block menu %}
+    {% if user.is_authenticated %}
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{% url 'logout' %}">
+                <button type="button" class="btn btn-dark">Выйти</button>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{% url 'gallery-create' %}">
+                <button type="button" class="btn btn-dark">Добавить</button>
+            </a>
+        </li>
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{% url 'profile' request.user.pk %}">
+                <button type="button" class="btn btn-dark">Кабинет</button>
+            </a>
+        </li>
+    {% else %}
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{% url 'login' %}">
+                <button type="button" class="btn btn-dark">Войти</button>
+            </a>
+        </li>
+
+        <li class="nav-item">
+            <a class="nav-link" aria-current="page" href="{% url 'register' %}">
+                <button type="button" class="btn btn-dark">Зарегестрироваться</button>
+            </a>
+        </li>
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <div class="container cont">
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for gallery in galleries %}
+                <div class="col">
+                    <div class="card">
+                        {% if gallery.photo %}
+                            <img src="{{ gallery.photo.url }}" class="card-img-top" alt="{{ gallery.photo.url }}">
+                        {% endif %}
+                        <div class="card-body">
+                            <h5 class="card-title">Автор: <a class="profile"
+                                                             href="{% url 'profile' gallery.author.pk %}">{{ gallery.author }}</a>
+                            </h5>
+                            <h5 class="card-title">Подпись: {{ gallery.signature }}</h5><br>
+                            <div class="btn-group" role="group">
+                                <a class="nav-link" aria-current="page" href="{% url 'gallery-detail' gallery.pk %}">
+                                    <button type="button" class="btn btn-dark">Подробнее</button>
+                                </a>
+                                <input type="submit" class="btn btn-success"
+                                       id="{{ gallery.pk }}" value="Добавить"
+                                       style="margin-left: 10px; border-radius: 5px">
+                            </div>
+                        </div>
+                    </div>
+                </div>
+            {% endfor %}
+        </div>
+        <br>
+        {% include 'partial/pagination.html' %}
+    </div>
+    <script type="application/javascript">
+        const add = document.querySelectorAll('.btn-success');
+        add.forEach(add => add.addEventListener('click', function () {
+            let xhr = new XMLHttpRequest();
+            xhr.onload = function () {
+                console.log(xhr.status);
+            };
+            if (add.value === 'Добавить'){
+                add.value = 'Удалить'
+            } else{
+                add.value = 'Добавить'
+            }
+            xhr.open('POST', `api/favorite/${this.getAttribute('id')}`);
+            xhr.send()
+        }))
+    </script>
+{% endblock %}

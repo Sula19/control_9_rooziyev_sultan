@@ -1,0 +1,45 @@
+{% extends 'base.html' %}
+{% load static %}
+{% block title %}Detail{% endblock %}
+{% block menu %}
+    {% if user.is_authenticated %}
+        {% if gallery.author == request.user or perms.gallery.change_gallery %}
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{% url 'gallery-update' gallery.pk %}">
+                    <button type="button" class="btn btn-dark">Редактировать</button>
+                </a>
+            </li>
+            <li class="nav-item">
+                <a class="nav-link" aria-current="page" href="{% url 'gallery-delete' gallery.pk %}">
+                    <button type="button" class="btn btn-dark">Удалить</button>
+                </a>
+            </li>
+        {% endif %}
+    {% endif %}
+{% endblock %}
+{% block content %}
+    <div class="container cont">
+        <div class="card" style="max-width: 100%;">
+            <div class="row g-0">
+                <div class="col-md-4">
+                    {% if gallery.photo %}
+                        <img src="{{ gallery.photo.url }}" class="img-fluid rounded-start"
+                             alt="{{ gallery.photo.url }}">
+                    {% endif %}
+                </div>
+                <div class="col-md-8">
+                    <div class="card-body">
+                        <h5 class="card-title">Автор - <a class="profile"
+                                                          href="{% url 'profile' gallery.author.pk %}">{{ gallery.author }}</a>
+                        </h5><br>
+                        <h5 class="card-title">Подпись - {{ gallery.signature }}</h5><br>
+                        <h5 class="card-title">Создание - {{ gallery.created_at }}</h5><br>
+                        <a class="nav-link" aria-current="page" href="/">
+                            <button type="button" class="btn btn-dark">Назад</button>
+                        </a>
+                    </div>
+                </div>
+            </div>
+        </div>
+    </div>
+{% endblock %}

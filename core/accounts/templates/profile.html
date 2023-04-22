@@ -1,0 +1,25 @@
+{% extends 'base.html' %}
+{% block title %}Profile{% endblock %}
+{% block content %}
+    <div class="container cont">
+        <div class="row d-flex justify-content-start">
+            <div class="col-7 card text-bg-light form-margins">
+                <h2>Личная страница {{ user_obj.username }}</h2><br>
+                <h4>Логин: {{ user_obj.username }}</h4><br>
+                <h4>Почта: {{ user_obj.email }}</h4><br>
+                <h4>Имя: {{ user_obj.first_name }}</h4><br>
+                <h4>Фамилия: {{ user_obj.last_name }}</h4><br>
+            </div>
+        </div>
+        <br>
+        <h3>Избранное</h3><br>
+        <div class="row row-cols-1 row-cols-md-3 g-4">
+            {% for i in user_obj.favorite.all %}
+                <div class="col">
+                    <a href="{% url 'profile' i.author.pk %}"><img src="{{ i.photo.url }}" alt="" height="350"
+                                                                   width="350"></a>
+                </div>
+            {% endfor %}
+        </div>
+    </div>
+{% endblock %}
